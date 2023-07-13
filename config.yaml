@@ -1,0 +1,5 @@
+include : secret.yaml
+
+output:
+  json: 'ON'
+  email: 'ON'
