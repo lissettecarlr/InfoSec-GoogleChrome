@@ -39,7 +39,13 @@ The source code of this repository is modified based on ohyicong and is mainly u
             pass : 'If it is a 163 mailbox, enable IMAP/SMTP service in the web version settings to obtain' 
             sender : 'Sender's email'   
             receivers : 'Receiver's email (can be the same as the sender's email)'
+        resend:
+            key : 'resend.dev key'
+            from: 'resend from'
+            to: "register resend email"
     ```    
+    The resend email method here requires you to register an account first and generate a key. It is important to note that by default, the 'from' and 'to' fields are fixed, and you can see them in the example after registration. If the key is not provided, this email method will not be used.
+    
 * Modify the config file to configure whether to send emails and whether to save to a local json file:
     ```yaml
         include : secret.yaml

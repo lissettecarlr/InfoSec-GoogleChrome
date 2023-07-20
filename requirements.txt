@@ -1,3 +1,5 @@
 pycryptodomex
 PyYAML
 pywin32
+resend
+

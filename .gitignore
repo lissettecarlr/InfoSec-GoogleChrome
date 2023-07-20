@@ -140,3 +140,4 @@ cython_debug/
 secret.yaml
 PyObfx
 logs
+output.json

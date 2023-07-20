@@ -3,3 +3,4 @@ include : secret.yaml
 output:
   json: 'ON'
   email: 'ON'
+  sender_email : 'ON'
